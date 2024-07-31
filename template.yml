@@ -10,6 +10,15 @@ Parameters:
     Default: Notes
 
 #### TODO 4: Enable tracing for functions and api
+Globals:
+  Function:
+    Tracing: Active
+  Api:
+    TracingEnabled: true
+    MethodSettings:
+      - LoggingLevel: INFO
+        ResourcePath: '/*'
+        HttpMethod: '*'
 
         
 #### End TODO 4
@@ -134,7 +143,7 @@ Resources:
       Runtime: java11
       MemorySize: 2048
       Timeout: 600
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/DynamoDBReadRole  
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/DynamoDBWriteRole 
       Environment:
         Variables:
           TABLE_NAME: !Ref pollyNotesTable

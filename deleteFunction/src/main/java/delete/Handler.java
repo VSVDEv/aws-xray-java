@@ -11,6 +11,7 @@ import com.amazonaws.xray.strategy.sampling.AllSamplingStrategy;
 import com.amazonaws.xray.entities.Subsegment;
 
 // TODO 1: Add an AWS Xray library that can be used to instrument the DynamoDB client.
+import com.amazonaws.xray.interceptors.TracingInterceptor;
 
 // End TODO 1
 
@@ -73,6 +74,7 @@ public class Handler implements RequestHandler<APIGatewayProxyRequestEvent, APIG
             var client = DynamoDbAsyncClient.builder()
                     .overrideConfiguration(ClientOverrideConfiguration.builder()
 // TODO 2: Send calls by this client to AWS X-Ray
+                    .addExecutionInterceptor(new TracingInterceptor())
                             
 // End TODO 2
                             .build())
@@ -84,7 +86,10 @@ public class Handler implements RequestHandler<APIGatewayProxyRequestEvent, APIG
             key.put("NoteId", AttributeValue.builder().n(id).build());
             
 // TODO 3                                      
-            
+            Subsegment currentSubsegment = AWSXRay.getCurrentSubsegment();
+            currentSubsegment.putAnnotation("UserId", UserId);
+            currentSubsegment.putAnnotation("NoteId", id);
+
 // TODO 3
 
             var request = DeleteItemRequest.builder()
